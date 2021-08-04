@@ -1,6 +1,7 @@
 import express from "express";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
+import authenticate from "./routes/authenticate";
 import players from "./routes/players";
 
 const app = express();
@@ -8,6 +9,7 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+app.use("/authenticate", authenticate);
 app.use("/players", players);
 
 const options = {
@@ -16,8 +18,7 @@ const options = {
     info: {
       title: "Football Manager API",
       version: "1.0.0",
-      description:
-        "This is a simple API for managing football players",
+      description: "This is a simple API for managing football players",
       license: {
         name: "MIT",
         url: "https://spdx.org/licenses/MIT.html",
@@ -33,17 +34,22 @@ const options = {
         url: "http://localhost:3000",
       },
     ],
+    components: {
+      securitySchemes: {
+        jwt: {
+          type: "http",
+          scheme: "bearer",
+          in: "header",
+          bearerFormat: "JWT",
+        },
+      },
+    },
   },
-  apis: [`${__dirname}/routes/players.js`],
+  apis: [`${__dirname}/routes/*`],
 };
 
 const specs = swaggerJsdoc(options);
-app.use(
-  "/api-docs",
-  swaggerUi.serve,
-  swaggerUi.setup(specs)
-);
-
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT);

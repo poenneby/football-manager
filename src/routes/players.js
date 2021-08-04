@@ -1,4 +1,3 @@
-// Prefer separating the document for formatting reasons?
 /**
  * @swagger
  * components:
@@ -45,9 +44,10 @@
  *   description: API to manage football players.
  */
 
-
 import { Router } from "express";
 const router = Router();
+
+import authenticateJWT from "../middlewares/authentication";
 
 import players from "../data/players";
 
@@ -57,6 +57,8 @@ import players from "../data/players";
  *    get:
  *      summary: Lists all the players
  *      tags: [Players]
+ *      security:
+ *	      - jwt: []
  *      responses:
  *        "200":
  *          description: The list of players.
@@ -65,7 +67,7 @@ import players from "../data/players";
  *              schema:
  *                $ref: '#/components/schemas/Player'
  */
-router.get("/", function (req, res) {
+router.get("/", authenticateJWT, function (req, res) {
   res.status(200).json(players);
 });
 
@@ -82,6 +84,8 @@ router.get("/", function (req, res) {
  *            type: integer
  *          required: true
  *          description: The player id
+ *      security:
+ *	      - jwt: []
  *      responses:
  *        "200":
  *          description: The list of players.
@@ -92,7 +96,7 @@ router.get("/", function (req, res) {
  *        "404":
  *          description: Player not found.
  */
-router.get("/:id", function (req, res) {
+router.get("/:id", authenticateJWT, function (req, res) {
   let player = players.find(function (item) {
     return item.id == req.params.id;
   });
@@ -112,6 +116,8 @@ router.get("/:id", function (req, res) {
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/Player'
+ *     security:
+ *	     - jwt: []
  *     responses:
  *       "200":
  *         description: The created player.
@@ -121,7 +127,7 @@ router.get("/:id", function (req, res) {
  *               $ref: '#/components/schemas/Player'
  *
  */
-router.post("/", function (req, res) {
+router.post("/", authenticateJWT, function (req, res) {
   const { name, nationality, dateOfBirth, preferredFoot } = req.body;
 
   let player = {
@@ -157,13 +163,15 @@ router.post("/", function (req, res) {
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/Player'
+ *     security:
+ *	     - jwt: []
  *     responses:
  *       "204":
  *         description: Update was successful.
  *       "404":
  *         description: Player not found.
  */
-router.put("/:id", function (req, res) {
+router.put("/:id", authenticateJWT, function (req, res) {
   let player = find(function (item) {
     return item.id == req.params.id;
   });
@@ -176,7 +184,8 @@ router.put("/:id", function (req, res) {
       name: name !== undefined ? name : player.name,
       nationality: nationality !== undefined ? nationality : player.nationality,
       dateOfBirth: dateOfBirth !== undefined ? dateOfBirth : player.dateOfBirth,
-      preferredFoot: preferredFoot !== undefined ? preferredFoot : player.preferredFoot,
+      preferredFoot:
+        preferredFoot !== undefined ? preferredFoot : player.preferredFoot,
       createdAt: player.createdAt,
     };
 
@@ -201,13 +210,15 @@ router.put("/:id", function (req, res) {
  *           type: integer
  *         required: true
  *         description: The player id
+ *     security:
+ *	     - jwt: []
  *     responses:
  *       "204":
  *         description: Delete was successful.
  *       "404":
  *         description: Player not found.
  */
-router.delete("/:id", function (req, res) {
+router.delete("/:id", authenticateJWT, function (req, res) {
   let player = players.find(function (item) {
     return item.id == req.params.id;
   });
