@@ -54,7 +54,6 @@ const accessTokenSecret = "youraccesstokensecret";
  *
  */
 router.post("/", function (req, res) {
-  // Read username and password from request body
   const { username, password } = req.body;
 
   // Only Joe can access this application

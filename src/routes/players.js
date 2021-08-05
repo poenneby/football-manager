@@ -51,8 +51,6 @@ import authenticateJWT from "../middlewares/authentication";
 
 import playerService from "../services/playerService.js";
 
-import players from "../data/players";
-
 /**
  * @swagger
  * /players:
@@ -127,11 +125,10 @@ router.get("/:id", authenticateJWT, async function (req, res) {
  *               $ref: '#/components/schemas/Player'
  *
  */
-router.post("/", authenticateJWT, function (req, res) {
+router.post("/", authenticateJWT, async function (req, res) {
   const { name, nationality, dateOfBirth, preferredFoot } = req.body;
 
   let player = {
-    id: players.length + 1,
     name,
     nationality,
     dateOfBirth,
@@ -139,9 +136,9 @@ router.post("/", authenticateJWT, function (req, res) {
     createdAt: new Date(),
   };
 
-  players.push(player);
+  const result = await playerService.save(player);
 
-  res.status(201).json(player);
+  res.status(201).json(result);
 });
 
 /**
@@ -171,26 +168,15 @@ router.post("/", authenticateJWT, function (req, res) {
  *       "404":
  *         description: Player not found.
  */
-router.put("/:id", authenticateJWT, function (req, res) {
-  let player = players.find(function (item) {
-    return item.id == req.params.id;
-  });
+router.put("/:id", authenticateJWT, async function (req, res) {
+  const player = await playerService.findById(req.params.id);
 
   if (player) {
-    const { name, nationality, dateOfBirth, preferredFoot } = req.body;
-
     let updated = {
-      id: player.id,
-      name: name !== undefined ? name : player.name,
-      nationality: nationality !== undefined ? nationality : player.nationality,
-      dateOfBirth: dateOfBirth !== undefined ? dateOfBirth : player.dateOfBirth,
-      preferredFoot:
-        preferredFoot !== undefined ? preferredFoot : player.preferredFoot,
-      createdAt: player.createdAt,
+      ...player,
+      ...req.body,
     };
-
-    players.splice(players.indexOf(player), 1, updated);
-
+    playerService.save(updated);
     res.sendStatus(204);
   } else {
     res.sendStatus(404);
@@ -199,7 +185,7 @@ router.put("/:id", authenticateJWT, function (req, res) {
 
 /**
  * @swagger
- * /players:
+ * /players/{id}:
  *   delete:
  *     summary: Deletes a player by id
  *     tags: [Players]
@@ -218,17 +204,8 @@ router.put("/:id", authenticateJWT, function (req, res) {
  *       "404":
  *         description: Player not found.
  */
-router.delete("/:id", authenticateJWT, function (req, res) {
-  let player = players.find(function (item) {
-    return item.id == req.params.id;
-  });
-
-  if (player) {
-    players.splice(players.indexOf(player), 1);
-  } else {
-    return res.sendStatus(404);
-  }
-
+router.delete("/:id", authenticateJWT, async function (req, res) {
+  await playerService.remove(req.params.id);
   res.sendStatus(204);
 });
 
