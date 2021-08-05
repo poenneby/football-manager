@@ -172,7 +172,7 @@ router.post("/", authenticateJWT, function (req, res) {
  *         description: Player not found.
  */
 router.put("/:id", authenticateJWT, function (req, res) {
-  let player = find(function (item) {
+  let player = players.find(function (item) {
     return item.id == req.params.id;
   });
 
