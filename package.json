@@ -4,7 +4,7 @@
   "description": "Manage a football team",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --exec babel-node src/index.js",
+    "start": "nodemon --exec babel-node --experimental-modules --es-module-specifier-resolution=node src/index.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "eslint": "eslint src"
@@ -13,8 +13,10 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
+    "pg": "^8.7.1",
     "swagger-jsdoc": "^6.1.0",
     "swagger-ui-express": "^4.1.6"
   },

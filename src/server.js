@@ -4,6 +4,10 @@ import swaggerUi from "swagger-ui-express";
 import authenticate from "./routes/authenticate";
 import players from "./routes/players";
 
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));

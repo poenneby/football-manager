@@ -49,6 +49,8 @@ const router = Router();
 
 import authenticateJWT from "../middlewares/authentication";
 
+import playerService from "../services/playerService.js";
+
 import players from "../data/players";
 
 /**
@@ -67,7 +69,8 @@ import players from "../data/players";
  *              schema:
  *                $ref: '#/components/schemas/Player'
  */
-router.get("/", authenticateJWT, function (req, res) {
+router.get("/", authenticateJWT, async function (req, res) {
+  const players = await playerService.findAll();
   res.status(200).json(players);
 });
 
@@ -96,11 +99,8 @@ router.get("/", authenticateJWT, function (req, res) {
  *        "404":
  *          description: Player not found.
  */
-router.get("/:id", authenticateJWT, function (req, res) {
-  let player = players.find(function (item) {
-    return item.id == req.params.id;
-  });
-
+router.get("/:id", authenticateJWT, async function (req, res) {
+  const player = await playerService.findById(req.params.id);
   player ? res.status(200).json(player) : res.sendStatus(404);
 });
 
