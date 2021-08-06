@@ -133,7 +133,6 @@ router.post("/", authenticateJWT, async function (req, res) {
     nationality,
     dateOfBirth,
     preferredFoot,
-    createdAt: new Date(),
   };
 
   const result = await playerService.save(player);

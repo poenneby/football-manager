@@ -67,7 +67,7 @@ async function save(player) {
           player.nationality,
           player.dateOfBirth,
           player.preferredFoot,
-          player.createdAt,
+          new Date(),
         ]);
     return result.rows.map((row) => ({
       id: row.id,
