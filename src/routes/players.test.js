@@ -19,7 +19,7 @@ test("GET should respond unauthorized when no valid authorization token present"
 
 test("GET players should return players", async () => {
   const jwt = await fetchToken();
-  jest.spyOn(playerService, "findAll").mockReturnValue([
+  jest.spyOn(playerService, "getAllPlayers").mockReturnValue([
     {
       id: 1,
       name: "Diego Maradona",
@@ -47,7 +47,7 @@ test("GET players should return players", async () => {
 
 test("GET players by id should return player", async () => {
   const jwt = await fetchToken();
-  jest.spyOn(playerService, "findById").mockReturnValue([
+  jest.spyOn(playerService, "getPlayerById").mockReturnValue([
     {
       id: 1,
       name: "Diego Maradona",
@@ -78,14 +78,14 @@ test("PUT players by id should update player", async () => {
     preferredFoot: "Left",
   };
   const jwt = await fetchToken();
-  jest.spyOn(playerService, "findById").mockReturnValue({
+  jest.spyOn(playerService, "getPlayerById").mockReturnValue({
     id: 1,
     name: "Diego Maradona",
     dateOfBirth: "1960-10-30",
     nationality: "Argentina",
     preferredFoot: "Right",
   });
-  playerService.save = jest.fn();
+  playerService.createPlayer = jest.fn();
 
   const response = await request
     .put("/players/1")
@@ -93,7 +93,7 @@ test("PUT players by id should update player", async () => {
     .send(playerUpdate);
 
   expect(response.status).toBe(204);
-  expect(playerService.save).toHaveBeenCalledWith({
+  expect(playerService.createPlayer).toHaveBeenCalledWith({
     id: 1,
     name: "Diego Maradona",
     dateOfBirth: "1960-10-30",
@@ -110,7 +110,7 @@ test("POST players should create player", async () => {
     preferredFoot: "Right",
   };
   const jwt = await fetchToken();
-  playerService.save = jest.fn();
+  playerService.createPlayer = jest.fn();
 
   const response = await request
     .post("/players")
@@ -118,7 +118,7 @@ test("POST players should create player", async () => {
     .send(newPlayer);
 
   expect(response.status).toBe(201);
-  expect(playerService.save).toHaveBeenCalledWith({
+  expect(playerService.createPlayer).toHaveBeenCalledWith({
     name: "Diego Maradona",
     dateOfBirth: "1960-10-30",
     nationality: "Argentina",
@@ -128,12 +128,12 @@ test("POST players should create player", async () => {
 
 test("DELETE players should delete player", async () => {
   const jwt = await fetchToken();
-  playerService.remove = jest.fn();
+  playerService.deletePlayer = jest.fn();
 
   const response = await request
     .delete("/players/1")
     .set("Authorization", `Bearer ${jwt}`);
 
   expect(response.status).toBe(204);
-  expect(playerService.remove).toHaveBeenCalledWith("1");
+  expect(playerService.deletePlayer).toHaveBeenCalledWith("1");
 });

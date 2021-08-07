@@ -68,7 +68,7 @@ import playerService from "../services/playerService.js";
  *                $ref: '#/components/schemas/Player'
  */
 router.get("/", authenticateJWT, async function (req, res) {
-  const players = await playerService.findAll();
+  const players = await playerService.getAllPlayers();
   res.status(200).json(players);
 });
 
@@ -98,7 +98,7 @@ router.get("/", authenticateJWT, async function (req, res) {
  *          description: Player not found.
  */
 router.get("/:id", authenticateJWT, async function (req, res) {
-  const player = await playerService.findById(req.params.id);
+  const player = await playerService.getPlayerById(req.params.id);
   player ? res.status(200).json(player) : res.sendStatus(404);
 });
 
@@ -135,7 +135,7 @@ router.post("/", authenticateJWT, async function (req, res) {
     preferredFoot,
   };
 
-  const result = await playerService.save(player);
+  const result = await playerService.createPlayer(player);
 
   res.status(201).json(result);
 });
@@ -168,14 +168,14 @@ router.post("/", authenticateJWT, async function (req, res) {
  *         description: Player not found.
  */
 router.put("/:id", authenticateJWT, async function (req, res) {
-  const player = await playerService.findById(req.params.id);
+  const player = await playerService.getPlayerById(req.params.id);
 
   if (player) {
     let updated = {
       ...player,
       ...req.body,
     };
-    playerService.save(updated);
+    playerService.createPlayer(updated);
     res.sendStatus(204);
   } else {
     res.sendStatus(404);
@@ -204,7 +204,7 @@ router.put("/:id", authenticateJWT, async function (req, res) {
  *         description: Player not found.
  */
 router.delete("/:id", authenticateJWT, async function (req, res) {
-  await playerService.remove(req.params.id);
+  await playerService.deletePlayer(req.params.id);
   res.sendStatus(204);
 });
 
