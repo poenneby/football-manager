@@ -12,8 +12,17 @@ async function createPlayer(player) {
   return await user.save(player);
 }
 
-async function updatePlayer(player) {
-  return await user.save(player);
+async function updatePlayer(id, playerChanges) {
+  const foundPlayer = user.findById(id);
+
+  if (foundPlayer) {
+    let updated = {
+      ...foundPlayer,
+      ...playerChanges,
+    };
+    return await user.save(updated);
+  }
+  return undefined;
 }
 
 async function deletePlayer(id) {

@@ -70,7 +70,7 @@ router.post("/", function (req, res) {
       accessToken,
     });
   } else {
-    res.send("Username or password incorrect");
+    res.status(401).send("Username or password incorrect");
   }
 });
 

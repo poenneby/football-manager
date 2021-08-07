@@ -168,14 +168,9 @@ router.post("/", authenticateJWT, async function (req, res) {
  *         description: Player not found.
  */
 router.put("/:id", authenticateJWT, async function (req, res) {
-  const player = await playerService.getPlayerById(req.params.id);
+  const player = await playerService.updatePlayer(req.params.id, req.body);
 
   if (player) {
-    let updated = {
-      ...player,
-      ...req.body,
-    };
-    playerService.createPlayer(updated);
     res.sendStatus(204);
   } else {
     res.sendStatus(404);
