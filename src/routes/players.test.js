@@ -1,7 +1,7 @@
 import { jest, test, expect } from "@jest/globals";
 import app from "../server";
 import supertest from "supertest";
-import user from "../models/user";
+import user from "../models/player";
 
 const request = supertest(app);
 

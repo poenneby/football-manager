@@ -1,4 +1,4 @@
-import user from "../models/user";
+import user from "../models/player";
 
 async function getAllPlayers() {
   return await user.findAll();
