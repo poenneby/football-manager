@@ -35,7 +35,7 @@ async function findById(id) {
 
 async function update(client, player) {
   return await client.query(
-    `UPDATE player SET name = $2, nationality = $3, date_of_birth = $4, preferred_foot = $5, created_at = $6 WHERE id = $1`,
+    `UPDATE player SET name = $2, nationality = $3, date_of_birth = $4, preferred_foot = $5, created_at = $6 WHERE id = $1 RETURNING *`,
     [
       player.id,
       player.name,
@@ -49,7 +49,7 @@ async function update(client, player) {
 
 async function insert(client, player) {
   return await client.query(
-    "INSERT INTO player (name, nationality, date_of_birth, preferred_foot, created_at) VALUES ($1, $2, $3, $4, $5)",
+    "INSERT INTO player (name, nationality, date_of_birth, preferred_foot, created_at) VALUES ($1, $2, $3, $4, $5) RETURNING *",
     [
       player.name,
       player.nationality,

@@ -13,7 +13,7 @@ async function createPlayer(player) {
 }
 
 async function updatePlayer(id, playerChanges) {
-  const foundPlayer = user.findById(id);
+  const foundPlayer = await user.findById(id);
 
   if (foundPlayer) {
     let updated = {

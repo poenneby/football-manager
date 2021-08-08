@@ -35,10 +35,6 @@
  *         preferredFoot: Left
  *         dateOfBirth: 1994-03-20
  *
- */
-
-/**
- * @swagger
  * tags:
  *   name: Players
  *   description: API to manage football players.
@@ -66,6 +62,8 @@ import playerService from "../services/playerService.js";
  *            application/json:
  *              schema:
  *                $ref: '#/components/schemas/Player'
+ *        "401":
+ *          description: Unauthorized request.
  */
 router.get("/", authenticateJWT, async function (req, res) {
   const players = await playerService.getAllPlayers();
@@ -89,13 +87,15 @@ router.get("/", authenticateJWT, async function (req, res) {
  *	      - jwt: []
  *      responses:
  *        "200":
- *          description: The list of players.
+ *          description: The player.
  *          content:
  *            application/json:
  *              schema:
  *                $ref: '#/components/schemas/Player'
  *        "404":
  *          description: Player not found.
+ *        "401":
+ *          description: Unauthorized request.
  */
 router.get("/:id", authenticateJWT, async function (req, res) {
   const player = await playerService.getPlayerById(req.params.id);
@@ -123,6 +123,8 @@ router.get("/:id", authenticateJWT, async function (req, res) {
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Player'
+ *       "401":
+ *         description: Unauthorized request.
  *
  */
 router.post("/", authenticateJWT, async function (req, res) {
@@ -137,7 +139,7 @@ router.post("/", authenticateJWT, async function (req, res) {
 
   const result = await playerService.createPlayer(player);
 
-  res.status(201).json(result);
+  res.status(200).json(result);
 });
 
 /**
@@ -162,16 +164,18 @@ router.post("/", authenticateJWT, async function (req, res) {
  *     security:
  *	     - jwt: []
  *     responses:
- *       "204":
+ *       "200":
  *         description: Update was successful.
  *       "404":
  *         description: Player not found.
+ *       "401":
+ *         description: Unauthorized request.
  */
 router.put("/:id", authenticateJWT, async function (req, res) {
   const player = await playerService.updatePlayer(req.params.id, req.body);
 
   if (player) {
-    res.sendStatus(204);
+    res.status(200).json(player);
   } else {
     res.sendStatus(404);
   }
@@ -197,6 +201,8 @@ router.put("/:id", authenticateJWT, async function (req, res) {
  *         description: Delete was successful.
  *       "404":
  *         description: Player not found.
+ *       "401":
+ *         description: Unauthorized request.
  */
 router.delete("/:id", authenticateJWT, async function (req, res) {
   await playerService.deletePlayer(req.params.id);

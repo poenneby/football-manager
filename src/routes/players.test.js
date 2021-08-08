@@ -109,7 +109,7 @@ test("PUT players by id should update player", async () => {
     .set("Authorization", `Bearer ${jwt}`)
     .send(playerUpdate);
 
-  expect(response.status).toBe(204);
+  expect(response.status).toBe(200);
   expect(user.save).toHaveBeenCalledWith({
     id: 1,
     name: "Diego Maradona",
@@ -149,7 +149,7 @@ test("POST players should create player", async () => {
     .set("Authorization", `Bearer ${jwt}`)
     .send(newPlayer);
 
-  expect(response.status).toBe(201);
+  expect(response.status).toBe(200);
   expect(user.save).toHaveBeenCalledWith({
     name: "Diego Maradona",
     dateOfBirth: "1960-10-30",
